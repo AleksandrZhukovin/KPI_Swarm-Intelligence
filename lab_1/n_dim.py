@@ -32,7 +32,7 @@ def genetic():
             offspring.extend([child1, child2])
 
         population = np.array(offspring[:50])
-        mutation = np.random.rand(50, 3) < 0.1
+        mutation = np.random.rand(50, 3) < 0.01
         population += mutation * np.random.uniform(-0.5, 0.5, (50, 3))
         population = np.clip(population, -5.12, 5.12)
 
