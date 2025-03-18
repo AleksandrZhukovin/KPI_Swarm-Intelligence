@@ -30,7 +30,7 @@ def genetic_algorithm():
 
         while len(offspring) < 50:
             p1, p2 = random.sample(selected, 2)
-            crossover_point = random.randint(1, 16 - 1)
+            crossover_point = random.randint(1, 15)
             child1 = p1[:crossover_point] + p2[crossover_point:]
             child2 = p2[:crossover_point] + p1[crossover_point:]
             offspring.extend([child1, child2])
@@ -39,7 +39,7 @@ def genetic_algorithm():
 
         for i in range(len(population)):
             if random.random() < 0.01:
-                mutation_point = random.randint(0, 16 - 1)
+                mutation_point = random.randint(0, 15)
                 population[i] = population[i][:mutation_point] + (
                     '1' if population[i][mutation_point] == '0' else '0') + population[i][mutation_point + 1:]
 

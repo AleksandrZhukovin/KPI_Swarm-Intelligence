@@ -40,5 +40,5 @@ reductor_bond = [
 
 optimizer = Optimizer(fitness_function=reductor, bounds=reductor_bond)
 for method in optimization_methods:
-    best_values, min_distances = optimizer.optimize(pop_size, method=method)
+    best_values = optimizer.optimize(pop_size, method=method)
     plot_results(best_values, generations, f"Редуктор {method}")

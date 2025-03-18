@@ -16,18 +16,16 @@ class Optimizer:
 
     def _particle_swarm(self, pop_size):
         w = 0.5
-        c1, c2 = 1.5, 1.5
+        a1, a2 = 1.5, 1.5
         population = self._initialize_population(pop_size)
         velocity = np.random.uniform(-1, 1, (pop_size, self._dim))
         personal_best = population.copy()
         global_best = population[np.argmin([self._fitness_function(ind) for ind in population])]
-        best_values, min_distances, history = [], [], []
+        best_values = []
 
         for _ in range(self._generations):
             fitness = np.array([self._fitness_function(ind) for ind in population])
             best_values.append(fitness.copy())
-            min_distances.append(abs(fitness.min()))
-            history.append(population.copy())
 
             better_mask = fitness < np.array([self._fitness_function(ind) for ind in personal_best])
             personal_best[better_mask] = population[better_mask]
@@ -36,24 +34,22 @@ class Optimizer:
                 global_best = population[np.argmin(fitness)]
 
             r1, r2 = np.random.rand(pop_size, self._dim), np.random.rand(pop_size, self._dim)
-            velocity = w * velocity + c1 * r1 * (personal_best - population) + c2 * r2 * (global_best - population)
+            velocity = w * velocity + a1 * r1 * (personal_best - population) + a2 * r2 * (global_best - population)
             population += velocity
             population = np.clip(population, self._bounds[:, 0], self._bounds[:, 1])
 
         # if self._dim == 2:
-        #     self._visualize_optimization(history, 'pso')
+        #     self._visualize_optimization(best_values, 'pso')
 
-        return best_values, min_distances
+        return best_values
 
     def _bee_algorithm(self, pop_size):
         population = self._initialize_population(pop_size)
-        best_values, min_distances, history = [], [], []
+        best_values = []
 
         for _ in range(self._generations):
             fitness = np.array([self._fitness_function(ind) for ind in population])
             best_values.append(fitness.copy())
-            min_distances.append(abs(fitness.min()))
-            history.append(population.copy())
 
             elite = population[np.argsort(fitness)[:pop_size // 5]]
             new_population = elite.copy()
@@ -65,20 +61,18 @@ class Optimizer:
             population = np.clip(new_population, self._bounds[:, 0], self._bounds[:, 1])
 
         # if self._dim == 2:
-        #     self._visualize_optimization(history, 'bee')
+        #     self._visualize_optimization(best_values, 'bee')
 
-        return best_values, min_distances
+        return best_values
 
     def _firefly_algorithm(self, pop_size):
         alpha, beta0, gamma = 0.5, 1.0, 0.1
         population = self._initialize_population(pop_size)
-        best_values, min_distances, history = [], [], []
+        best_values = []
 
         for _ in range(self._generations):
             fitness = np.array([self._fitness_function(ind) for ind in population])
             best_values.append(fitness.copy())
-            min_distances.append(abs(fitness.min()))
-            history.append(population.copy())
 
             new_population = population.copy()
             for i in range(pop_size):
@@ -91,9 +85,9 @@ class Optimizer:
             population = np.clip(new_population, self._bounds[:, 0], self._bounds[:, 1])
 
         # if self._dim == 2:
-        #     self._visualize_optimization(history, 'firefly')
+        #     self._visualize_optimization(best_values, 'firefly')
 
-        return best_values, min_distances
+        return best_values
 
     def _initialize_population(self, pop_size):
         return np.random.uniform(self._bounds[:, 0], self._bounds[:, 1], (pop_size, self._dim))
