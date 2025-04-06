@@ -24,25 +24,10 @@ matplotlib.use('TkAgg')
 #     plt.grid()
 #     plt.show()
 #
-#
-# def test2():
-#     optimizer = Optimizer(fitness_function=eq1, bounds=[
-#         (-10, 10),
-#         (-10, 10),
-#         (-10, 10),
-#         (1, 3)
-#     ], generations=500)
-#
-#     k_res = optimizer.optimize(pop_size=50, method="kukushka")
-#     b_res = optimizer.optimize(pop_size=50, method="bat")
-#     print("Кукушка:", min(k_res))
-#     print("Кажан:", min(b_res))
-#
-#
 # test1()
 
 
-def dif(alpha, target_b, target_B):
+def dif(alpha):
     def equations(t, state):
         x, x_dot, y = state
         dx_dt = x_dot
@@ -51,20 +36,15 @@ def dif(alpha, target_b, target_B):
         return [dx_dt, dx_dot_dt, dy_dt]
 
     initial_state = np.array([1, alpha[0], 1])
-    t_span = [1, target_b]
+    t_span = [1, 3]
     solution = solve_ivp(equations, t_span, initial_state, dense_output=True)
     x_at_b = solution.y[0, -1]
-    return (x_at_b - target_B) ** 2
+    return (x_at_b - 2) ** 2
 
 
 def test_dif():
-    bounds = [(0, 5)]
-    optimizer = Optimizer(
-        fitness_function=lambda alpha: dif(
-            alpha, 3, 2
-        ),
-        bounds=bounds,
-    )
+    bounds = [(-3, 3)]
+    optimizer = Optimizer(fitness_function=dif, bounds=bounds)
 
     best_values_kukushka = optimizer.optimize(pop_size=10, method="kukushka")
     best_values_bat = optimizer.optimize(pop_size=10, method="bat")

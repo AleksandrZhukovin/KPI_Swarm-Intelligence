@@ -8,7 +8,7 @@ class Optimizer:
         self._generations = generations
         self._dim = len(bounds)
 
-    def _cuckoo_search(self, pop_size):
+    def _kukushka_search(self, pop_size):
         delta = 0.5
         p_d = 0.3
         nests = np.random.uniform(self._bounds[:, 0], self._bounds[:, 1], (pop_size, self._dim))
@@ -79,7 +79,7 @@ class Optimizer:
 
     def optimize(self, pop_size, method):
         if method == "kukushka":
-            return self._cuckoo_search(pop_size)
+            return self._kukushka_search(pop_size)
         elif method == "bat":
             return self._bat_algorithm(pop_size)
         else:
